@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      APP_NAME: TIMS
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?Set APP_KEY in Portainer}
+      APP_URL: ${APP_URL:?Set APP_URL to the HTTPS API URL}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Manila}
+      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
+      DB_CONNECTION: mysql
+      DB_HOST: ${DB_HOST:?Set DB_HOST to the existing MySQL server}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:?Set DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME:?Set DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD}
+      SESSION_DRIVER: database
+      SESSION_SECURE_COOKIE: "true"
+      CACHE_STORE: database
+      QUEUE_CONNECTION: sync
+    ports:
+      - "${API_BIND_ADDRESS:-127.0.0.1}:${API_PORT:-8080}:80"
+    volumes:
+      - api-storage:/var/www/html/storage
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://127.0.0.1/up') === false ? 1 : 0);"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  api-storage:

@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+vendor
+storage
+bootstrap/cache/*.php
+.git
+.gitignore
+Dockerfile
+compose.yaml
+README.md
