@@ -117,28 +117,20 @@ mode, writes application logs to the container log, and stores Laravel's
 - The default bind address assumes a reverse proxy on the same host. Use
   firewall rules and the proxy's access controls appropriate for your network.
 
-## Self-contained Docker Compose (API + MySQL)
+## Docker Compose (API on host MySQL)
 
-`docker-compose.yml` runs the API and a MySQL 8.4 database together on one
-host, with persistent volumes `mysql-data` and `api-storage`. MySQL is not
-published to the host. Create a production env file (never commit it):
+`docker-compose.yml` runs only the API. It connects to the MySQL server on the
+Docker host through `host.docker.internal`, and all values come from the stack
+environment (for example, Portainer's **Environment variables**). No env file is
+used. Required variables: `APP_KEY`, `APP_URL`, `DB_USERNAME`, `DB_PASSWORD`.
+Optional: `API_PORT` (default `8060`), `DB_DATABASE`, `APP_TIMEZONE`,
+`LOG_LEVEL`, `TRUSTED_PROXIES`.
 
-```env
-APP_KEY=base64:...               # php artisan key:generate --show, or openssl as above
-APP_URL=https://api.example.com
-DB_DATABASE=tims
-DB_USERNAME=tims
-DB_PASSWORD=strong-password
-MYSQL_ROOT_PASSWORD=strong-root-password
-# Optional: API_PORT (8080), API_BIND_ADDRESS (127.0.0.1), TRUSTED_PROXIES, APP_TIMEZONE, LOG_LEVEL
-```
-
-Always pass the file explicitly, because Compose otherwise auto-loads
-`backend/.env` (the development file):
+The API is published on all host interfaces at `API_PORT`, so restrict access
+with a firewall or reverse proxy. Run migrations once after deployment:
 
 ```sh
-docker compose --env-file .env.production -f docker-compose.yml up -d --build
-docker compose --env-file .env.production -f docker-compose.yml exec api php artisan migrate --force
+docker compose -f docker-compose.yml exec tims_backend_api php artisan migrate --force
 ```
 
 ## Local development

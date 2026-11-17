@@ -1,56 +1,34 @@
-name: tims
-
 services:
-  mysql:
-    image: mysql:8.4
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-tims}
-      MYSQL_USER: ${DB_USERNAME:?Set DB_USERNAME in .env.production}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env.production}
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-  api:
+  tims_backend_api:
     build:
       context: .
-    image: tims-api:latest
+      dockerfile: Dockerfile
+    container_name: tims-backend
     restart: unless-stopped
-    depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      APP_NAME: TIMS
-      APP_ENV: production
-      APP_DEBUG: "false"
-      APP_KEY: ${APP_KEY:?Set APP_KEY in .env.production}
-      APP_URL: ${APP_URL:?Set APP_URL in .env.production}
-      APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Manila}
-      TRUSTED_PROXIES: ${TRUSTED_PROXIES:-}
-      LOG_CHANNEL: stderr
-      LOG_LEVEL: ${LOG_LEVEL:-warning}
-      DB_CONNECTION: mysql
-      DB_HOST: mysql
-      DB_PORT: "3306"
-      DB_DATABASE: ${DB_DATABASE:-tims}
-      DB_USERNAME: ${DB_USERNAME:?Set DB_USERNAME in .env.production}
-      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env.production}
-      SESSION_DRIVER: database
-      SESSION_SECURE_COOKIE: "true"
-      CACHE_STORE: database
-      QUEUE_CONNECTION: sync
     ports:
-      - "${API_BIND_ADDRESS:-127.0.0.1}:${API_PORT:-8080}:80"
+      - "${API_PORT:-8060}:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - APP_NAME=TIMS
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=${APP_KEY:?Set APP_KEY in the stack environment}
+      - APP_URL=${APP_URL:?Set APP_URL in the stack environment}
+      - APP_TIMEZONE=${APP_TIMEZONE:-Asia/Manila}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-}
+      - LOG_CHANNEL=stderr
+      - LOG_LEVEL=${LOG_LEVEL:-warning}
+      - DB_CONNECTION=mysql
+      - DB_HOST=host.docker.internal
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-tims}
+      - DB_USERNAME=${DB_USERNAME:?Set DB_USERNAME in the stack environment}
+      - DB_PASSWORD=${DB_PASSWORD:?Set DB_PASSWORD in the stack environment}
+      - SESSION_DRIVER=database
+      - SESSION_SECURE_COOKIE=true
+      - CACHE_STORE=database
+      - QUEUE_CONNECTION=sync
     volumes:
       - api-storage:/var/www/html/storage
     healthcheck:
@@ -61,5 +39,4 @@ services:
       start_period: 30s
 
 volumes:
-  mysql-data:
   api-storage:
