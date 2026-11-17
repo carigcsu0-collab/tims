@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'package:tims/app/config/app_config.dart';
 import 'package:tims/core/exceptions/app_exceptions.dart';
 
 /// Interceptor that attaches the Bearer token to every authenticated request.
@@ -135,7 +136,7 @@ class ApiClient {
 
   /// Factory that creates an [ApiClient] with all interceptors configured.
   factory ApiClient.create({required String? Function() tokenProvider}) {
-    final baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:8001/api/v1';
+    final baseUrl = dotenv.env['API_BASE_URL'] ?? AppConfig.apiBaseUrl;
 
     final dio = Dio(
       BaseOptions(

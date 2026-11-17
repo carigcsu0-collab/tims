@@ -25,7 +25,7 @@ class AppConfig {
   static const String organization = 'CAGAYAN STATE UNIVERSITY-CARIG CAMPUS';
 
   /// API base URL (should match .env API_BASE_URL).
-  static const String apiBaseUrl = 'http://localhost:8001/api/v1';
+  static const String apiBaseUrl = 'https://dtc-main-pc.tail9ac631.ts.net/tims/api/v1';
 
   /// API version.
   static const String apiVersion = 'v1';
