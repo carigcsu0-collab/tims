@@ -119,7 +119,7 @@ mode, writes application logs to the container log, and stores Laravel's
 
 ## Self-contained Docker Compose (API + MySQL)
 
-`docker-compose.yaml` runs the API and a MySQL 8.4 database together on one
+`docker-compose.yml` runs the API and a MySQL 8.4 database together on one
 host, with persistent volumes `mysql-data` and `api-storage`. MySQL is not
 published to the host. Create a production env file (never commit it):
 
@@ -137,8 +137,8 @@ Always pass the file explicitly, because Compose otherwise auto-loads
 `backend/.env` (the development file):
 
 ```sh
-docker compose --env-file .env.production -f docker-compose.yaml up -d --build
-docker compose --env-file .env.production -f docker-compose.yaml exec api php artisan migrate --force
+docker compose --env-file .env.production -f docker-compose.yml up -d --build
+docker compose --env-file .env.production -f docker-compose.yml exec api php artisan migrate --force
 ```
 
 ## Local development
