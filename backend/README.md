@@ -117,6 +117,30 @@ mode, writes application logs to the container log, and stores Laravel's
 - The default bind address assumes a reverse proxy on the same host. Use
   firewall rules and the proxy's access controls appropriate for your network.
 
+## Self-contained Docker Compose (API + MySQL)
+
+`docker-compose.yaml` runs the API and a MySQL 8.4 database together on one
+host, with persistent volumes `mysql-data` and `api-storage`. MySQL is not
+published to the host. Create a production env file (never commit it):
+
+```env
+APP_KEY=base64:...               # php artisan key:generate --show, or openssl as above
+APP_URL=https://api.example.com
+DB_DATABASE=tims
+DB_USERNAME=tims
+DB_PASSWORD=strong-password
+MYSQL_ROOT_PASSWORD=strong-root-password
+# Optional: API_PORT (8080), API_BIND_ADDRESS (127.0.0.1), TRUSTED_PROXIES, APP_TIMEZONE, LOG_LEVEL
+```
+
+Always pass the file explicitly, because Compose otherwise auto-loads
+`backend/.env` (the development file):
+
+```sh
+docker compose --env-file .env.production -f docker-compose.yaml up -d --build
+docker compose --env-file .env.production -f docker-compose.yaml exec api php artisan migrate --force
+```
+
 ## Local development
 
 ## Requirements
