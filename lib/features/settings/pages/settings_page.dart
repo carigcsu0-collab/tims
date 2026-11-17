@@ -6,8 +6,12 @@ import 'package:tims/app/services/providers.dart';
 import 'package:tims/app/widgets/csu_logo.dart';
 import 'package:tims/app/widgets/page_header.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
+import 'package:tims/features/activity_logs/pages/activity_logs_page.dart';
+import 'package:tims/features/profile/pages/profile_page.dart';
 import 'package:tims/features/authentication/providers/auth_provider.dart';
+import 'package:tims/features/roles/pages/roles_page.dart';
 import 'package:tims/features/settings/providers/settings_provider.dart';
+import 'package:tims/features/users/pages/users_page.dart';
 
 /// Settings page for app configuration.
 class SettingsPage extends ConsumerStatefulWidget {
@@ -117,22 +121,23 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     leading: const Icon(Icons.lock_outline),
                     title: const Text('Change Password'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () =>
-                        context.showSnackBar('Change password - coming soon'),
+                    onTap: () => showChangePasswordDialog(context),
                   ),
                   ListTile(
                     leading: const Icon(Icons.people_outline),
                     title: const Text('User Management'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () =>
-                        context.showSnackBar('User management - coming soon'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const UsersPage()),
+                    ),
                   ),
                   ListTile(
                     leading: const Icon(Icons.security_outlined),
                     title: const Text('Roles & Permissions'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.showSnackBar(
-                        'Roles & permissions - coming soon'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const RolesPage()),
+                    ),
                   ),
                 ],
               ),
@@ -145,8 +150,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     leading: const Icon(Icons.history_outlined),
                     title: const Text('Activity Logs'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () =>
-                        context.showSnackBar('Activity logs - coming soon'),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (_) => const ActivityLogsPage()),
+                    ),
                   ),
                   ListTile(
                     leading: const Icon(Icons.info_outline),

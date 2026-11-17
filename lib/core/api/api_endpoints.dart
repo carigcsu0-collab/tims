@@ -42,10 +42,6 @@ class ApiEndpoints {
   static const String consumables = '/consumables';
   static String consumableById(int id) => '/consumables/$id';
 
-  // Suppliers
-  static const String suppliers = '/suppliers';
-  static String supplierById(int id) => '/suppliers/$id';
-
   // Procurement
   static const String purchaseRequests = '/purchase-requests';
   static String purchaseRequestById(int id) => '/purchase-requests/$id';

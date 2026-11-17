@@ -1,9 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:tims/app/services/providers.dart';
+import 'package:tims/core/api/api_client.dart';
 import 'package:tims/core/api/api_endpoints.dart';
+import 'package:tims/core/exceptions/app_exceptions.dart';
+import 'package:tims/core/models/item_model.dart';
 import 'package:tims/core/models/purchase_request_model.dart';
 import 'package:tims/core/repositories/crud_repository.dart';
+import 'package:tims/features/items/providers/items_provider.dart';
 
 /// State for purchase requests.
 sealed class PurchaseRequestsState {
@@ -40,10 +45,11 @@ final purchaseRequestsRepositoryProvider =
 
 class PurchaseRequestsNotifier
     extends StateNotifier<PurchaseRequestsState> {
-  PurchaseRequestsNotifier(this._repository)
+  PurchaseRequestsNotifier(this._repository, this._api)
       : super(const PurchaseRequestsInitial());
 
   final CrudRepository<PurchaseRequestModel> _repository;
+  final ApiClient _api;
 
   String _search = '';
   int _page = 1;
@@ -85,10 +91,79 @@ class PurchaseRequestsNotifier
       },
     );
   }
+
+  /// Creates a purchase request with [lines] (item id, quantity, unit cost, unit).
+  /// Returns an error message on failure, or null on success.
+  Future<String?> save({
+    required int requestedBy,
+    String? purpose,
+    String? department,
+    required List<Map<String, dynamic>> lines,
+  }) async {
+    final data = <String, dynamic>{
+      'pr_number': _generatePrNumber(),
+      'requested_by': requestedBy,
+      'purpose': purpose,
+      'department': department,
+      'items': lines,
+    };
+    final result = await _repository.create(data);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
+
+  Future<String?> delete(int id) async {
+    final result = await _repository.delete(id);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
+
+  /// Approves a pending purchase request. Returns an error message on failure.
+  Future<String?> approve(int id) =>
+      _postAction('${ApiEndpoints.purchaseRequests}/$id/approve');
+
+  /// Rejects a pending purchase request with [reason].
+  /// Returns an error message on failure.
+  Future<String?> reject(int id, String reason) => _postAction(
+        '${ApiEndpoints.purchaseRequests}/$id/reject',
+        data: {'rejected_reason': reason},
+      );
+
+  Future<String?> _postAction(String path, {Map<String, dynamic>? data}) async {
+    try {
+      await _api.post<dynamic>(path, data: data);
+    } on AppException catch (e) {
+      return e.message;
+    } catch (e) {
+      return e.toString();
+    }
+    refresh();
+    return null;
+  }
+
+  String _generatePrNumber() =>
+      'PR-${DateFormat('yyyyMMdd-HHmmss-SSS').format(DateTime.now())}';
 }
 
 final purchaseRequestsNotifierProvider = StateNotifierProvider<
     PurchaseRequestsNotifier, PurchaseRequestsState>((ref) {
   return PurchaseRequestsNotifier(
-      ref.watch(purchaseRequestsRepositoryProvider));
+    ref.watch(purchaseRequestsRepositoryProvider),
+    ref.watch(apiClientProvider),
+  );
+});
+
+/// Items available to select as purchase request lines.
+final purchaseRequestItemOptionsProvider =
+    FutureProvider.autoDispose<List<ItemModel>>((ref) async {
+  final result =
+      await ref.watch(itemsRepositoryProvider).getPaginated(perPage: 100);
+  return result.fold(
+    (failure) => throw failure.message,
+    (response) => response.data,
+  );
 });

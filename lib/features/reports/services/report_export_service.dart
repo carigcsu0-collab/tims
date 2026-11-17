@@ -110,9 +110,11 @@ class ReportExportService {
           ),
         );
 
+    // 8.5 x 13 in (US folio / long bond paper) at 72 pt per inch.
     doc.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a4.landscape,
-      margin: const pw.EdgeInsets.all(28),
+      pageFormat: const PdfPageFormat(
+          8.5 * PdfPageFormat.inch, 13 * PdfPageFormat.inch),
+      margin: const pw.EdgeInsets.all(36),
       header: (_) => header(),
       footer: (c) => pw.Align(
         alignment: pw.Alignment.centerRight,

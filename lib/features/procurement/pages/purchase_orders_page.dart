@@ -11,6 +11,8 @@ import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/helpers/date_helper.dart';
 import 'package:tims/core/helpers/format_helper.dart';
 import 'package:tims/features/procurement/providers/purchase_orders_provider.dart';
+import 'package:tims/features/procurement/widgets/purchase_order_detail_dialog.dart';
+import 'package:tims/features/procurement/widgets/purchase_order_form_dialog.dart';
 
 /// Purchase orders page.
 class PurchaseOrdersPage extends ConsumerStatefulWidget {
@@ -52,7 +54,7 @@ class _PurchaseOrdersPageState extends ConsumerState<PurchaseOrdersPage> {
             children: [
               const PageHeader(
                 title: 'Purchase Orders',
-                subtitle: 'Manage purchase orders sent to suppliers',
+                subtitle: 'Manage purchase orders',
                 icon: Icons.receipt_long,
               ),
               SearchBarWidget(
@@ -69,8 +71,7 @@ class _PurchaseOrdersPageState extends ConsumerState<PurchaseOrdersPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('Create purchase order - coming soon'),
+        onPressed: () => showPurchaseOrderFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -120,7 +121,6 @@ class _PurchaseOrdersPageState extends ConsumerState<PurchaseOrdersPage> {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Supplier: ${po.supplierName}'),
                 Text(
                   'Expected: ${DateHelper.formatDate(po.expectedDeliveryDate)} | '
                   '${po.items.length} items',
@@ -141,8 +141,7 @@ class _PurchaseOrdersPageState extends ConsumerState<PurchaseOrdersPage> {
                 StatusBadge.fromLabel(po.status.label),
               ],
             ),
-            onTap: () => context.showSnackBar(
-                'PO detail for ${po.poNumber} - coming soon'),
+            onTap: () => showPurchaseOrderDetailDialog(context, po),
           );
         },
       );

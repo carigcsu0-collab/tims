@@ -7,7 +7,9 @@ import 'package:tims/app/widgets/loading_widgets.dart';
 import 'package:tims/app/widgets/page_header.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/models/return_model.dart';
+import 'package:tims/features/returns/pages/return_detail_page.dart';
 import 'package:tims/features/returns/providers/returns_provider.dart';
+import 'package:tims/features/returns/widgets/return_form_dialog.dart';
 
 /// Returns page for recording returned borrowed items.
 class ReturnsPage extends ConsumerStatefulWidget {
@@ -51,8 +53,7 @@ class _ReturnsPageState extends ConsumerState<ReturnsPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('New return record - coming soon'),
+        onPressed: () => showReturnFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -89,7 +90,11 @@ class _ReturnsPageState extends ConsumerState<ReturnsPage> {
             leading: const CircleAvatar(child: Icon(Icons.undo)),
             title: Text(ret.returnNumber),
             subtitle: Text('Date: ${ret.returnDate} - Qty: ${ret.quantity}${ret.condition != null ? ' (${ret.condition!.label})' : ''}'),
-            onTap: () => context.showSnackBar('Return detail - coming soon'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ReturnDetailPage(returnId: ret.id),
+              ),
+            ),
           );
         },
       );

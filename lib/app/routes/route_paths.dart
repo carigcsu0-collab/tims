@@ -15,7 +15,7 @@ class RoutePaths {
   static const String items = '/items';
   static const String toolsEquipment = '/tools-equipment';
   static const String consumables = '/consumables';
-  static const String suppliers = '/suppliers';
+  static const String qualifications = '/qualifications';
   static const String purchaseRequests = '/purchase-requests';
   static const String purchaseOrders = '/purchase-orders';
   static const String receiving = '/receiving';
@@ -34,7 +34,6 @@ class RoutePaths {
   // Detail routes
   static String itemDetail(int id) => '/items/$id';
   static String categoryDetail(int id) => '/categories/$id';
-  static String supplierDetail(int id) => '/suppliers/$id';
   static String purchaseRequestDetail(int id) => '/purchase-requests/$id';
   static String purchaseOrderDetail(int id) => '/purchase-orders/$id';
   static String borrowingDetail(int id) => '/borrowing/$id';
@@ -55,7 +54,7 @@ class RouteNames {
   static const String items = 'items';
   static const String toolsEquipment = 'tools-equipment';
   static const String consumables = 'consumables';
-  static const String suppliers = 'suppliers';
+  static const String qualifications = 'qualifications';
   static const String purchaseRequests = 'purchase-requests';
   static const String purchaseOrders = 'purchase-orders';
   static const String receiving = 'receiving';

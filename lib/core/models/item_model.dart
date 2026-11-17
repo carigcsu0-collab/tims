@@ -138,8 +138,6 @@ class ItemModel extends Equatable {
     this.totalValue = 0,
     this.location,
     this.imageUrl,
-    this.supplierId,
-    this.supplierName,
     this.isActive = true,
     this.createdAt,
     this.updatedAt,
@@ -170,8 +168,6 @@ class ItemModel extends Equatable {
   final double totalValue;
   final String? location;
   final String? imageUrl;
-  final int? supplierId;
-  final String? supplierName;
   final bool isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -227,10 +223,6 @@ class ItemModel extends Equatable {
             : double.tryParse(json['total_value']?.toString() ?? '') ?? 0,
         location: json['location'] as String?,
         imageUrl: json['image_url'] as String?,
-        supplierId: json['supplier_id'] is int
-            ? json['supplier_id'] as int
-            : int.tryParse(json['supplier_id']?.toString() ?? ''),
-        supplierName: json['supplier_name'] as String?,
         isActive: json['is_active'] as bool? ?? true,
         createdAt: json['created_at'] != null
             ? DateTime.parse(json['created_at'] as String)
@@ -261,7 +253,6 @@ class ItemModel extends Equatable {
         'reorder_level': reorderLevel,
         'unit_cost': unitCost,
         'location': location,
-        'supplier_id': supplierId,
         'is_active': isActive,
       };
 
@@ -289,8 +280,6 @@ class ItemModel extends Equatable {
     double? totalValue,
     String? location,
     String? imageUrl,
-    int? supplierId,
-    String? supplierName,
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -321,8 +310,6 @@ class ItemModel extends Equatable {
         totalValue: totalValue ?? this.totalValue,
         location: location ?? this.location,
         imageUrl: imageUrl ?? this.imageUrl,
-        supplierId: supplierId ?? this.supplierId,
-        supplierName: supplierName ?? this.supplierName,
         isActive: isActive ?? this.isActive,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -334,6 +321,6 @@ class ItemModel extends Equatable {
         qualificationName, qualificationCode, categoryId, barcode,
         description, brand, model, serialNumber, quantity, minimumStock,
         maximumStock, reorderLevel, unitCost, totalValue, location,
-        imageUrl, supplierId, supplierName, isActive, createdAt, updatedAt,
+        imageUrl, isActive, createdAt, updatedAt,
       ];
 }

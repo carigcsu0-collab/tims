@@ -12,7 +12,7 @@ import 'package:tims/features/dashboard/pages/dashboard_page.dart';
 import 'package:tims/features/inventory/pages/inventory_page.dart';
 import 'package:tims/features/categories/pages/categories_page.dart';
 import 'package:tims/features/items/pages/items_page.dart';
-import 'package:tims/features/suppliers/pages/suppliers_page.dart';
+import 'package:tims/features/qualifications/pages/qualifications_page.dart';
 import 'package:tims/features/procurement/pages/purchase_requests_page.dart';
 import 'package:tims/features/procurement/pages/purchase_orders_page.dart';
 import 'package:tims/features/receiving/pages/receiving_page.dart';
@@ -94,9 +94,9 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const ItemsPage(),
           ),
           GoRoute(
-            path: RoutePaths.suppliers,
-            name: RouteNames.suppliers,
-            builder: (context, state) => const SuppliersPage(),
+            path: RoutePaths.qualifications,
+            name: RouteNames.qualifications,
+            builder: (context, state) => const QualificationsPage(),
           ),
           GoRoute(
             path: RoutePaths.purchaseRequests,

@@ -59,6 +59,38 @@ class CategoriesNotifier extends StateNotifier<CategoriesState> {
       (categories) => CategoriesLoaded(categories),
     );
   }
+
+  /// Saves a category. Pass [id] to update, or null to create.
+  /// Returns an error message on failure, or null on success.
+  Future<String?> save({
+    int? id,
+    required String name,
+    String? code,
+    String? description,
+    required bool isActive,
+  }) async {
+    final data = <String, dynamic>{
+      'name': name,
+      'code': code,
+      'description': description,
+      'is_active': isActive,
+    };
+    final result = id == null
+        ? await _repository.create(data)
+        : await _repository.update(id, data);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
+
+  Future<String?> delete(int id) async {
+    final result = await _repository.delete(id);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
 }
 
 final categoriesNotifierProvider =

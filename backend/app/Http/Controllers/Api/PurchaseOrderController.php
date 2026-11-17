@@ -10,7 +10,7 @@ class PurchaseOrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = PurchaseOrder::with(['supplier:id,name', 'createdBy:id,name', 'items.item:id,name,sku']);
+        $query = PurchaseOrder::with(['createdBy:id,name', 'items.item:id,name,sku']);
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
@@ -28,7 +28,6 @@ class PurchaseOrderController extends Controller
     {
         $data = $request->validate([
             'po_number' => 'required|string|unique:purchase_orders,po_number',
-            'supplier_id' => 'required|exists:suppliers,id',
             'purchase_request_id' => 'nullable|exists:purchase_requests,id',
             'expected_delivery_date' => 'nullable|date',
             'payment_terms' => 'nullable|string',
@@ -60,7 +59,7 @@ class PurchaseOrderController extends Controller
 
     public function show(PurchaseOrder $purchaseOrder)
     {
-        return response()->json($purchaseOrder->load(['supplier', 'createdBy', 'items.item']));
+        return response()->json($purchaseOrder->load(['createdBy', 'items.item']));
     }
 
     public function update(Request $request, PurchaseOrder $purchaseOrder)

@@ -32,9 +32,6 @@ Route::prefix('v1')->group(function () {
         // Qualifications (TVET training programs)
         Route::apiResource('qualifications', App\Http\Controllers\Api\QualificationController::class);
 
-        // Suppliers
-        Route::apiResource('suppliers', App\Http\Controllers\Api\SupplierController::class);
-
         // Purchase Requests
         Route::apiResource('purchase-requests', App\Http\Controllers\Api\PurchaseRequestController::class);
         Route::post('/purchase-requests/{id}/approve', [App\Http\Controllers\Api\PurchaseRequestController::class, 'approve']);

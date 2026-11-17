@@ -2,8 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:tims/app/services/providers.dart';
 import 'package:tims/core/api/api_endpoints.dart';
+import 'package:tims/core/models/item_model.dart';
+import 'package:tims/core/models/purchase_order_model.dart';
 import 'package:tims/core/models/receiving_model.dart';
 import 'package:tims/core/repositories/crud_repository.dart';
+import 'package:tims/features/items/providers/items_provider.dart';
+import 'package:tims/features/procurement/providers/purchase_orders_provider.dart';
 
 sealed class ReceivingState {
   const ReceivingState();
@@ -82,9 +86,58 @@ class ReceivingNotifier extends StateNotifier<ReceivingState> {
       },
     );
   }
+
+  /// Creates a receiving record (stock is increased by the backend).
+  /// Returns an error message on failure, or null on success.
+  Future<String?> save({
+    required String receivingNumber,
+    int? purchaseOrderId,
+    required String receivedDate,
+    String? notes,
+    required List<Map<String, dynamic>> items,
+  }) async {
+    final result = await _repository.create({
+      'receiving_number': receivingNumber,
+      'purchase_order_id': purchaseOrderId,
+      'received_date': receivedDate,
+      'notes': notes,
+      'items': items,
+    });
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
+
+  /// Deletes a receiving record. Returns an error message on failure, or null on success.
+  Future<String?> delete(int id) async {
+    final result = await _repository.delete(id);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
 }
 
 final receivingNotifierProvider =
     StateNotifierProvider<ReceivingNotifier, ReceivingState>((ref) {
   return ReceivingNotifier(ref.watch(receivingRepositoryProvider));
+});
+
+/// Items available for selection on a receiving record.
+final receivingItemOptionsProvider = FutureProvider<List<ItemModel>>((ref) async {
+  final result =
+      await ref.watch(itemsRepositoryProvider).getPaginated(perPage: 100);
+  return result.fold((failure) => throw Exception(failure.message),
+      (response) => response.data);
+});
+
+/// Purchase orders that a receiving record can be linked to.
+final receivingPurchaseOrderOptionsProvider =
+    FutureProvider<List<PurchaseOrderModel>>((ref) async {
+  final result = await ref
+      .watch(purchaseOrdersRepositoryProvider)
+      .getPaginated(perPage: 100);
+  return result.fold((failure) => throw Exception(failure.message),
+      (response) => response.data);
 });

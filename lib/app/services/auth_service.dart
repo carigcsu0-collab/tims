@@ -39,6 +39,9 @@ class AuthService {
   /// Returns the current authenticated user, or null.
   UserModel? get currentUser => _currentUser;
 
+  /// Replaces the cached user after a profile update.
+  void updateCurrentUser(UserModel user) => _currentUser = user;
+
   /// Returns true if a user is currently authenticated.
   bool get isAuthenticated => _currentToken != null;
 

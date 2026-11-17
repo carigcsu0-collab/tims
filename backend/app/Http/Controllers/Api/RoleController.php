@@ -18,10 +18,6 @@ class RoleController extends Controller
         ['name' => 'items.create', 'label' => 'Create Items', 'module' => 'items'],
         ['name' => 'items.edit', 'label' => 'Edit Items', 'module' => 'items'],
         ['name' => 'items.delete', 'label' => 'Delete Items', 'module' => 'items'],
-        ['name' => 'suppliers.view', 'label' => 'View Suppliers', 'module' => 'suppliers'],
-        ['name' => 'suppliers.create', 'label' => 'Create Suppliers', 'module' => 'suppliers'],
-        ['name' => 'suppliers.edit', 'label' => 'Edit Suppliers', 'module' => 'suppliers'],
-        ['name' => 'suppliers.delete', 'label' => 'Delete Suppliers', 'module' => 'suppliers'],
         ['name' => 'purchase-requests.view', 'label' => 'View Purchase Requests', 'module' => 'purchase-requests'],
         ['name' => 'purchase-requests.create', 'label' => 'Create Purchase Requests', 'module' => 'purchase-requests'],
         ['name' => 'purchase-requests.approve', 'label' => 'Approve Purchase Requests', 'module' => 'purchase-requests'],
@@ -49,7 +45,6 @@ class RoleController extends Controller
         'admin' => ['*'],
         'manager' => [
             'items.view', 'items.create', 'items.edit',
-            'suppliers.view', 'suppliers.create', 'suppliers.edit',
             'purchase-requests.view', 'purchase-requests.create', 'purchase-requests.approve',
             'purchase-orders.view', 'purchase-orders.create',
             'receivings.view', 'receivings.create',
@@ -60,7 +55,6 @@ class RoleController extends Controller
         ],
         'staff' => [
             'items.view',
-            'suppliers.view',
             'purchase-requests.view', 'purchase-requests.create',
             'issuances.view', 'issuances.create',
             'borrowings.view', 'borrowings.create',

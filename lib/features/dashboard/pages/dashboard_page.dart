@@ -285,16 +285,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
             onTap: () => context.go(RoutePaths.maintenance),
           ),
         ),
-        StaggeredGridTile.fit(
-          crossAxisCellCount: 1,
-          child: StatCard(
-            title: 'Suppliers',
-            value: FormatHelper.number(stats.totalSuppliers),
-            icon: Icons.local_shipping,
-            color: isDark ? Colors.brown.shade300 : Colors.brown,
-            onTap: () => context.go(RoutePaths.suppliers),
-          ),
-        ),
       ]),
     );
   }

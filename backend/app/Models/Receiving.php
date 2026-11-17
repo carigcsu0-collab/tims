@@ -10,7 +10,7 @@ class Receiving extends Model
     use HasFactory;
 
     protected $fillable = [
-        'receiving_number', 'purchase_order_id', 'supplier_id', 'received_date',
+        'receiving_number', 'purchase_order_id', 'received_date',
         'received_by', 'notes',
     ];
 
@@ -24,11 +24,6 @@ class Receiving extends Model
     public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function receivedBy()

@@ -54,7 +54,6 @@ class DashboardStatsModel extends Equatable {
     this.pendingPurchaseRequests = 0,
     this.activeBorrowings = 0,
     this.pendingMaintenance = 0,
-    this.totalSuppliers = 0,
     this.recentMovements = 0,
   });
 
@@ -72,7 +71,6 @@ class DashboardStatsModel extends Equatable {
   final int pendingPurchaseRequests;
   final int activeBorrowings;
   final int pendingMaintenance;
-  final int totalSuppliers;
   final int recentMovements;
 
   static int _int(dynamic v) => (v as num?)?.toInt() ?? 0;
@@ -99,7 +97,6 @@ class DashboardStatsModel extends Equatable {
         pendingPurchaseRequests: _int(json['pending_purchase_requests']),
         activeBorrowings: _int(json['active_borrowings']),
         pendingMaintenance: _int(json['pending_maintenance']),
-        totalSuppliers: _int(json['total_suppliers']),
         recentMovements: _int(json['recent_movements']),
       );
 
@@ -109,6 +106,6 @@ class DashboardStatsModel extends Equatable {
         lowStockCount, outOfStockCount, totalValue, needsRepairCount,
         condemnedCount, missingCount, lowStockConsumables,
         pendingPurchaseRequests, activeBorrowings, pendingMaintenance,
-        totalSuppliers, recentMovements,
+        recentMovements,
       ];
 }

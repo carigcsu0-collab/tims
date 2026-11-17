@@ -15,8 +15,8 @@ class AppConfig {
   static const String universityName = 'CAGAYAN STATE UNIVERSITY';
   static const String officeName = 'TVET Office';
 
-  /// CSU logo (place the file at assets/images/csu-logo.png).
-  static const String logoAsset = 'assets/images/csu-logo.png';
+  /// CSU logo used on printed reports.
+  static const String logoAsset = 'assets/images/csu-logo.jpeg';
 
   /// App version.
   static const String appVersion = '1.0.0';

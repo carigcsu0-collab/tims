@@ -10,7 +10,7 @@ class AssetController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Item::with(['category:id,name', 'supplier:id,name'])
+        $query = Item::with(['category:id,name'])
             ->whereIn('type', ['asset', 'equipment']);
 
         if ($request->has('search')) {
@@ -36,7 +36,7 @@ class AssetController extends Controller
     public function show($id)
     {
         $item = Item::whereIn('type', ['asset', 'equipment'])->findOrFail($id);
-        return response()->json($item->load(['category', 'supplier', 'maintenances', 'stockMovements.user:id,name']));
+        return response()->json($item->load(['category', 'maintenances', 'stockMovements.user:id,name']));
     }
 
     public function store(Request $request)
@@ -57,7 +57,6 @@ class AssetController extends Controller
             'unit_cost' => 'nullable|numeric|min:0',
             'location' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'supplier_id' => 'nullable|exists:suppliers,id',
             'is_active' => 'boolean',
         ]);
 
@@ -86,7 +85,6 @@ class AssetController extends Controller
             'unit_cost' => 'nullable|numeric|min:0',
             'location' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'supplier_id' => 'nullable|exists:suppliers,id',
             'is_active' => 'boolean',
         ]);
 

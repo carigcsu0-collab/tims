@@ -13,7 +13,7 @@ class Item extends Model
         'name', 'sku', 'barcode', 'type', 'status', 'condition', 'unit', 'category_id', 'qualification_id',
         'description', 'brand', 'model', 'serial_number', 'quantity',
         'minimum_stock', 'maximum_stock', 'reorder_level', 'unit_cost',
-        'total_value', 'location', 'image_url', 'supplier_id', 'is_active',
+        'total_value', 'location', 'image_url', 'is_active',
     ];
 
     protected function casts(): array
@@ -49,11 +49,6 @@ class Item extends Model
     public function qualification()
     {
         return $this->belongsTo(Qualification::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function borrowings()

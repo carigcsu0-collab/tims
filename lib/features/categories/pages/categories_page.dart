@@ -9,6 +9,7 @@ import 'package:tims/app/widgets/search_bar_widget.dart';
 import 'package:tims/app/widgets/status_badge.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/features/categories/providers/categories_provider.dart';
+import 'package:tims/features/categories/widgets/category_form_dialog.dart';
 
 /// Categories page for managing inventory categories.
 class CategoriesPage extends ConsumerStatefulWidget {
@@ -66,7 +67,7 @@ class _CategoriesPageState extends ConsumerState<CategoriesPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.showSnackBar('Add category - coming soon'),
+        onPressed: () => showCategoryFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -121,8 +122,7 @@ class _CategoriesPageState extends ConsumerState<CategoriesPage> {
             trailing: StatusBadge.fromLabel(
               category.isActive ? 'Active' : 'Inactive',
             ),
-            onTap: () => context.showSnackBar(
-                'Category detail for ${category.name} - coming soon'),
+            onTap: () => showCategoryFormDialog(context, category: category),
           );
         },
       );

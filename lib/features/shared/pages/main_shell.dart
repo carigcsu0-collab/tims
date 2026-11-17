@@ -26,7 +26,7 @@ const _navItems = <_NavItem>[
   _NavItem(icon: Icons.inventory_2_outlined, label: 'Inventory', path: RoutePaths.inventory),
   _NavItem(icon: Icons.category_outlined, label: 'Categories', path: RoutePaths.categories),
   _NavItem(icon: Icons.widgets_outlined, label: 'Items', path: RoutePaths.items),
-  _NavItem(icon: Icons.local_shipping_outlined, label: 'Suppliers', path: RoutePaths.suppliers),
+  _NavItem(icon: Icons.verified_outlined, label: 'Qualifications', path: RoutePaths.qualifications),
   _NavItem(icon: Icons.request_quote_outlined, label: 'Purchase Requests', path: RoutePaths.purchaseRequests),
   _NavItem(icon: Icons.receipt_long_outlined, label: 'Purchase Orders', path: RoutePaths.purchaseOrders),
   _NavItem(icon: Icons.inbox_outlined, label: 'Receiving', path: RoutePaths.receiving),

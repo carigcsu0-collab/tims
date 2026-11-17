@@ -10,7 +10,7 @@ class PurchaseOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'po_number', 'status', 'supplier_id', 'total_amount',
+        'po_number', 'status', 'total_amount',
         'purchase_request_id', 'expected_delivery_date', 'actual_delivery_date',
         'payment_terms', 'delivery_address', 'notes', 'created_by',
     ];
@@ -22,11 +22,6 @@ class PurchaseOrder extends Model
             'expected_delivery_date' => 'date',
             'actual_delivery_date' => 'date',
         ];
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function createdBy()

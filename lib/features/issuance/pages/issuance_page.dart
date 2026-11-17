@@ -6,6 +6,8 @@ import 'package:tims/app/widgets/error_display.dart';
 import 'package:tims/app/widgets/loading_widgets.dart';
 import 'package:tims/app/widgets/page_header.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
+import 'package:tims/features/issuance/pages/issuance_detail_page.dart';
+import 'package:tims/features/issuance/pages/issuance_form_page.dart';
 import 'package:tims/features/issuance/providers/issuance_provider.dart';
 
 /// Issuance page for recording items issued to departments/personnel.
@@ -42,16 +44,15 @@ class _IssuancePageState extends ConsumerState<IssuancePage> {
                 subtitle: 'Record items issued to departments and personnel',
                 icon: Icons.outbox,
               ),
-              Expanded(
-                child: _buildBody(state),
-              ),
+              Expanded(child: _buildBody(state)),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('New issuance record - coming soon'),
+        onPressed: () => Navigator.of(context).push<bool>(
+          MaterialPageRoute(builder: (_) => const IssuanceFormPage()),
+        ),
         child: const Icon(Icons.add),
       ),
     );
@@ -67,8 +68,7 @@ class _IssuancePageState extends ConsumerState<IssuancePage> {
     if (state is IssuanceError) {
       return ErrorDisplay(
         message: state.message,
-        onRetry: () =>
-            ref.read(issuanceNotifierProvider.notifier).refresh(),
+        onRetry: () => ref.read(issuanceNotifierProvider.notifier).refresh(),
       );
     }
     if (state is IssuanceLoaded) {
@@ -87,9 +87,15 @@ class _IssuancePageState extends ConsumerState<IssuancePage> {
           return ListTile(
             leading: const CircleAvatar(child: Icon(Icons.outbox)),
             title: Text(iss.issuanceNumber),
-            subtitle: Text('Date: ${iss.issueDate}${iss.purpose != null ? ' - ${iss.purpose}' : ''}'),
+            subtitle: Text(
+              'Date: ${iss.issueDate}${iss.purpose != null ? ' - ${iss.purpose}' : ''}',
+            ),
             trailing: Text('${iss.items.length} items'),
-            onTap: () => context.showSnackBar('Issuance detail - coming soon'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => IssuanceDetailPage(issuance: iss),
+              ),
+            ),
           );
         },
       );

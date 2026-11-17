@@ -10,7 +10,9 @@ import 'package:tims/app/widgets/status_badge.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/helpers/date_helper.dart';
 import 'package:tims/core/helpers/format_helper.dart';
+import 'package:tims/features/procurement/pages/purchase_request_detail_page.dart';
 import 'package:tims/features/procurement/providers/purchase_requests_provider.dart';
+import 'package:tims/features/procurement/widgets/purchase_request_form_dialog.dart';
 
 /// Purchase requests page.
 class PurchaseRequestsPage extends ConsumerStatefulWidget {
@@ -69,8 +71,7 @@ class _PurchaseRequestsPageState extends ConsumerState<PurchaseRequestsPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('Create purchase request - coming soon'),
+        onPressed: () => showPurchaseRequestFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -141,8 +142,11 @@ class _PurchaseRequestsPageState extends ConsumerState<PurchaseRequestsPage> {
                 StatusBadge.fromLabel(pr.status.label),
               ],
             ),
-            onTap: () => context.showSnackBar(
-                'PR detail for ${pr.prNumber} - coming soon'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => PurchaseRequestDetailPage(request: pr),
+              ),
+            ),
           );
         },
       );

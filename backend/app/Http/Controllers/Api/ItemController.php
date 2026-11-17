@@ -10,7 +10,7 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Item::with(['category:id,name', 'supplier:id,name', 'qualification:id,name,code']);
+        $query = Item::with(['category:id,name', 'qualification:id,name,code']);
 
         if ($request->boolean('low_stock_only', false)) {
             $query->whereColumn('quantity', '<=', 'minimum_stock');
@@ -75,7 +75,6 @@ class ItemController extends Controller
             'unit_cost' => 'nullable|numeric|min:0',
             'location' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'supplier_id' => 'nullable|exists:suppliers,id',
             'is_active' => 'boolean',
         ]);
 
@@ -86,7 +85,7 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
-        return response()->json($item->load(['category', 'supplier', 'qualification', 'stockMovements.user:id,name']));
+        return response()->json($item->load(['category', 'qualification', 'stockMovements.user:id,name']));
     }
 
     public function update(Request $request, Item $item)
@@ -112,7 +111,6 @@ class ItemController extends Controller
             'unit_cost' => 'nullable|numeric|min:0',
             'location' => 'nullable|string',
             'image_url' => 'nullable|string',
-            'supplier_id' => 'nullable|exists:suppliers,id',
             'is_active' => 'boolean',
         ]);
 
@@ -134,7 +132,7 @@ class ItemController extends Controller
     {
         $items = Item::whereColumn('quantity', '<=', 'minimum_stock')
             ->where('quantity', '>', 0)
-            ->with(['category:id,name', 'supplier:id,name'])
+            ->with(['category:id,name'])
             ->orderBy('quantity')
             ->paginate(15);
 

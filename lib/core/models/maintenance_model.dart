@@ -24,8 +24,9 @@ enum MaintenanceStatus {
   }
 
   static MaintenanceStatus fromString(String? value) {
+    final normalized = value?.toLowerCase().replaceAll('_', '');
     return MaintenanceStatus.values.firstWhere(
-      (e) => e.name == value?.toLowerCase().replaceAll('_', ''),
+      (e) => e.name.toLowerCase() == normalized,
       orElse: () => MaintenanceStatus.scheduled,
     );
   }
@@ -105,7 +106,9 @@ class MaintenanceModel extends Equatable {
         id: json['id'] as int,
         maintenanceNumber: json['maintenance_number'] as String,
         itemId: json['item_id'] as int,
-        itemName: json['item_name'] as String,
+        itemName: (json['item_name'] ??
+                (json['item'] is Map ? json['item']['name'] : null) ??
+                '#${json['item_id']}') as String,
         type: MaintenanceType.fromString(json['type'] as String?),
         status: MaintenanceStatus.fromString(json['status'] as String?),
         scheduledDate: DateTime.parse(json['scheduled_date'] as String),
@@ -113,7 +116,7 @@ class MaintenanceModel extends Equatable {
             ? DateTime.parse(json['completed_date'] as String)
             : null,
         technician: json['technician'] as String?,
-        cost: (json['cost'] as num?)?.toDouble() ?? 0,
+        cost: double.tryParse(json['cost']?.toString() ?? '') ?? 0,
         description: json['description'] as String?,
         findings: json['findings'] as String?,
         recommendations: json['recommendations'] as String?,

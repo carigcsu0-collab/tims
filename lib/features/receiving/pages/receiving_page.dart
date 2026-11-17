@@ -6,7 +6,9 @@ import 'package:tims/app/widgets/error_display.dart';
 import 'package:tims/app/widgets/loading_widgets.dart';
 import 'package:tims/app/widgets/page_header.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
+import 'package:tims/features/receiving/pages/receiving_detail_page.dart';
 import 'package:tims/features/receiving/providers/receiving_provider.dart';
+import 'package:tims/features/receiving/widgets/receiving_form_dialog.dart';
 
 /// Receiving page for recording received goods from purchase orders.
 class ReceivingPage extends ConsumerStatefulWidget {
@@ -50,8 +52,7 @@ class _ReceivingPageState extends ConsumerState<ReceivingPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('New receiving record - coming soon'),
+        onPressed: () => showReceivingFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -89,7 +90,11 @@ class _ReceivingPageState extends ConsumerState<ReceivingPage> {
             title: Text(rec.receivingNumber),
             subtitle: Text('Date: ${rec.receivedDate}${rec.notes != null ? ' - ${rec.notes}' : ''}'),
             trailing: Text('${rec.items.length} items'),
-            onTap: () => context.showSnackBar('Receiving detail - coming soon'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => ReceivingDetailPage(receiving: rec),
+              ),
+            ),
           );
         },
       );

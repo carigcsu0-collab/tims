@@ -10,6 +10,8 @@ import 'package:tims/app/widgets/status_badge.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/helpers/date_helper.dart';
 import 'package:tims/features/borrowing/providers/borrowing_provider.dart';
+import 'package:tims/features/borrowing/widgets/borrowing_detail_dialog.dart';
+import 'package:tims/features/borrowing/widgets/borrowing_form_dialog.dart';
 
 /// Borrowing page for managing tool/equipment borrowing transactions.
 class BorrowingPage extends ConsumerStatefulWidget {
@@ -67,8 +69,7 @@ class _BorrowingPageState extends ConsumerState<BorrowingPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('New borrowing - coming soon'),
+        onPressed: () => showBorrowingFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -133,8 +134,7 @@ class _BorrowingPageState extends ConsumerState<BorrowingPage> {
               ],
             ),
             trailing: StatusBadge.fromLabel(b.status.label),
-            onTap: () => context.showSnackBar(
-                'Borrowing detail for ${b.borrowNumber} - coming soon'),
+            onTap: () => showBorrowingDetailDialog(context, b),
           );
         },
       );

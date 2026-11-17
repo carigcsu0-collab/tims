@@ -11,6 +11,7 @@ import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/helpers/format_helper.dart';
 import 'package:tims/core/models/item_model.dart';
 import 'package:tims/features/items/providers/items_provider.dart';
+import 'package:tims/features/items/widgets/item_form_dialog.dart';
 
 /// Inventory overview page showing all inventory items with filtering.
 class InventoryPage extends ConsumerStatefulWidget {
@@ -35,6 +36,16 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _openForm([ItemModel? item]) async {
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (_) => ItemFormDialog(item: item),
+    );
+    if (saved == true && mounted) {
+      context.showSnackBar(item == null ? 'Item added' : 'Item updated');
+    }
   }
 
   @override
@@ -67,7 +78,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.showSnackBar('Add item - coming soon'),
+        onPressed: () => _openForm(),
         child: const Icon(Icons.add),
       ),
     );
@@ -143,10 +154,7 @@ class _InventoryPageState extends ConsumerState<InventoryPage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          onTap: () {
-            context.showSnackBar(
-                'Item detail for ${item.name} - coming soon');
-          },
+          onTap: () => _openForm(item),
         );
       },
     );

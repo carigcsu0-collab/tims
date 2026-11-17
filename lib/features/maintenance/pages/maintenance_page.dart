@@ -10,7 +10,9 @@ import 'package:tims/app/widgets/status_badge.dart';
 import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/helpers/date_helper.dart';
 import 'package:tims/core/helpers/format_helper.dart';
+import 'package:tims/features/maintenance/pages/maintenance_detail_page.dart';
 import 'package:tims/features/maintenance/providers/maintenance_provider.dart';
+import 'package:tims/features/maintenance/widgets/maintenance_form_dialog.dart';
 
 /// Maintenance page for managing equipment maintenance schedules and records.
 class MaintenancePage extends ConsumerStatefulWidget {
@@ -68,8 +70,7 @@ class _MaintenancePageState extends ConsumerState<MaintenancePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            context.showSnackBar('New maintenance record - coming soon'),
+        onPressed: () => showMaintenanceFormDialog(context),
         child: const Icon(Icons.add),
       ),
     );
@@ -142,8 +143,11 @@ class _MaintenancePageState extends ConsumerState<MaintenancePage> {
                 StatusBadge.fromLabel(m.status.label),
               ],
             ),
-            onTap: () => context.showSnackBar(
-                'Maintenance detail for ${m.maintenanceNumber} - coming soon'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => MaintenanceDetailPage(maintenance: m),
+              ),
+            ),
           );
         },
       );

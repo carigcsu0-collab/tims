@@ -13,7 +13,7 @@ class ReceivingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Receiving::with(['supplier:id,name', 'receivedBy:id,name', 'purchaseOrder:id,po_number', 'items.item:id,name,sku']);
+        $query = Receiving::with(['receivedBy:id,name', 'purchaseOrder:id,po_number', 'items.item:id,name,sku']);
 
         if ($request->has('search')) {
             $search = $request->search;
@@ -28,7 +28,6 @@ class ReceivingController extends Controller
         $data = $request->validate([
             'receiving_number' => 'required|string|unique:receivings,receiving_number',
             'purchase_order_id' => 'nullable|exists:purchase_orders,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
             'received_date' => 'required|date',
             'notes' => 'nullable|string',
             'items' => 'required|array|min:1',
@@ -75,7 +74,7 @@ class ReceivingController extends Controller
 
     public function show(Receiving $receiving)
     {
-        return response()->json($receiving->load(['supplier', 'receivedBy', 'purchaseOrder', 'items.item']));
+        return response()->json($receiving->load(['receivedBy', 'purchaseOrder', 'items.item']));
     }
 
     public function update(Request $request, Receiving $receiving)

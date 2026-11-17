@@ -204,7 +204,7 @@ class _TvetReportPageState extends ConsumerState<TvetReportPage> {
                     icon: const Icon(Icons.date_range),
                     label: Text(_range == null
                         ? 'Date range'
-                        : '${DateFormat.yMMMd().format(_range!.start)} â€“ ${DateFormat.yMMMd().format(_range!.end)}'),
+                        : '${DateFormat.yMMMd().format(_range!.start)} – ${DateFormat.yMMMd().format(_range!.end)}'),
                     onPressed: () async {
                       final picked = await showDateRangePicker(
                         context: context,

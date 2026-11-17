@@ -63,7 +63,9 @@ class PurchaseOrderItemModel extends Equatable {
       PurchaseOrderItemModel(
         id: json['id'] as int,
         itemId: json['item_id'] as int,
-        itemName: json['item_name'] as String,
+        itemName: (json['item_name'] ??
+                (json['item'] is Map ? json['item']['name'] : null) ??
+                '#${json['item_id']}') as String,
         quantityOrdered: json['quantity_ordered'] is int
             ? json['quantity_ordered'] as int
             : int.tryParse(json['quantity_ordered']?.toString() ?? '') ?? 0,
@@ -98,8 +100,6 @@ class PurchaseOrderModel extends Equatable {
     required this.id,
     required this.poNumber,
     required this.status,
-    required this.supplierId,
-    required this.supplierName,
     required this.items,
     this.totalAmount = 0,
     this.purchaseRequestId,
@@ -117,8 +117,6 @@ class PurchaseOrderModel extends Equatable {
   final int id;
   final String poNumber;
   final PurchaseOrderStatus status;
-  final int supplierId;
-  final String supplierName;
   final List<PurchaseOrderItemModel> items;
   final double totalAmount;
   final int? purchaseRequestId;
@@ -138,11 +136,6 @@ class PurchaseOrderModel extends Equatable {
       id: json['id'] as int,
       poNumber: json['po_number'] as String,
       status: PurchaseOrderStatus.fromString(json['status'] as String?),
-      supplierId: json['supplier_id'] is int
-          ? json['supplier_id'] as int
-          : (json['supplier_id'] is Map ? json['supplier_id']['id'] as int? : null) ?? 0,
-      supplierName: json['supplier_name'] as String? ??
-          (json['supplier'] is Map ? json['supplier']['name'] as String? : null) ?? '',
       items: itemsRaw
           .map((e) => PurchaseOrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -179,7 +172,6 @@ class PurchaseOrderModel extends Equatable {
         'id': id,
         'po_number': poNumber,
         'status': status.name,
-        'supplier_id': supplierId,
         'total_amount': totalAmount,
         'purchase_request_id': purchaseRequestId,
         'expected_delivery_date': expectedDeliveryDate?.toIso8601String(),
@@ -191,7 +183,7 @@ class PurchaseOrderModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id, poNumber, status, supplierId, supplierName, items,
+        id, poNumber, status, items,
         totalAmount, purchaseRequestId, expectedDeliveryDate,
         actualDeliveryDate, paymentTerms, deliveryAddress, notes,
         createdBy, createdByName, createdAt, updatedAt,

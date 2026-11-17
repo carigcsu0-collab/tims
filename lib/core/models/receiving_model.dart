@@ -5,7 +5,6 @@ class ReceivingModel extends Equatable {
     required this.id,
     required this.receivingNumber,
     this.purchaseOrderId,
-    this.supplierId,
     required this.receivedDate,
     required this.receivedBy,
     this.notes,
@@ -17,7 +16,6 @@ class ReceivingModel extends Equatable {
   final int id;
   final String receivingNumber;
   final int? purchaseOrderId;
-  final int? supplierId;
   final String receivedDate;
   final int receivedBy;
   final String? notes;
@@ -31,7 +29,6 @@ class ReceivingModel extends Equatable {
       id: json['id'] as int,
       receivingNumber: json['receiving_number'] as String,
       purchaseOrderId: json['purchase_order_id'] as int?,
-      supplierId: json['supplier_id'] as int?,
       receivedDate: json['received_date'] as String,
       receivedBy: json['received_by'] is int ? json['received_by'] as int : (json['received_by'] as Map?)?['id'] as int? ?? 0,
       notes: json['notes'] as String?,
@@ -53,7 +50,6 @@ class ReceivingModel extends Equatable {
         'id': id,
         'receiving_number': receivingNumber,
         'purchase_order_id': purchaseOrderId,
-        'supplier_id': supplierId,
         'received_date': receivedDate,
         'received_by': receivedBy,
         'notes': notes,
@@ -65,7 +61,6 @@ class ReceivingModel extends Equatable {
         id,
         receivingNumber,
         purchaseOrderId,
-        supplierId,
         receivedDate,
         receivedBy,
         notes,

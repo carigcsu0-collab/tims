@@ -14,5 +14,4 @@ export 'qualification_model.dart';
 export 'receiving_model.dart';
 export 'return_model.dart';
 export 'stock_movement_model.dart';
-export 'supplier_model.dart';
 export 'user_model.dart';

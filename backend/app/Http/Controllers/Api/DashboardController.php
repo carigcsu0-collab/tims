@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Item;
-use App\Models\Supplier;
 use App\Models\PurchaseRequest;
 use App\Models\Borrowing;
 use App\Models\Maintenance;
@@ -38,7 +37,6 @@ class DashboardController extends Controller
             'pending_purchase_requests' => PurchaseRequest::where('status', 'pending')->count(),
             'active_borrowings' => Borrowing::where('status', 'borrowed')->count(),
             'pending_maintenance' => Maintenance::where('status', 'scheduled')->count(),
-            'total_suppliers' => Supplier::count(),
         ]);
     }
 

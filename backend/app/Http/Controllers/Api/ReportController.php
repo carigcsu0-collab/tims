@@ -14,7 +14,7 @@ class ReportController extends Controller
 {
     public function inventory(Request $request)
     {
-        $query = Item::with(['category:id,name', 'supplier:id,name']);
+        $query = Item::with(['category:id,name']);
 
         if ($request->has('type')) {
             $query->where('type', $request->type);
@@ -160,7 +160,7 @@ class ReportController extends Controller
 
     public function procurement(Request $request)
     {
-        $query = PurchaseOrder::with(['supplier:id,name', 'items.item:id,name,sku']);
+        $query = PurchaseOrder::with(['items.item:id,name,sku']);
 
         if ($request->has('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
