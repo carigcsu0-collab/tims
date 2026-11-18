@@ -41,6 +41,22 @@ class ProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
+  void initState() {
+    super.initState();
+    _refresh();
+  }
+
+  Future<void> _refresh() async {
+    final result = await ref.read(authServiceProvider).refreshCurrentUser();
+    if (!mounted) return;
+    setState(() {});
+    result.fold(
+      (failure) => context.showSnackBar(failure.message, isError: true),
+      (_) {},
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = ref.watch(authServiceProvider).currentUser;
 

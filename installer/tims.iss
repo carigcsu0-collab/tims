@@ -3,7 +3,7 @@
 ; Run from the project root after `flutter build windows --release`.
 
 #ifndef AppVersion
-  #define AppVersion "1.0.1"
+  #define AppVersion "1.0.2"
 #endif
 
 #define AppName "CSU TVET IMS"

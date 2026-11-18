@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:tims/app/providers/theme_provider.dart';
+import 'package:tims/app/routes/route_paths.dart';
 import 'package:tims/app/services/providers.dart';
 import 'package:tims/app/widgets/csu_logo.dart';
 import 'package:tims/app/widgets/page_header.dart';
@@ -115,7 +117,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     leading: const Icon(Icons.person_outline),
                     title: const Text('Profile'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.showSnackBar('Profile - navigate'),
+                    onTap: () => context.go(RoutePaths.profile),
                   ),
                   ListTile(
                     leading: const Icon(Icons.lock_outline),

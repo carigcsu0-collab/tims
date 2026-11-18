@@ -42,6 +42,15 @@ class AuthService {
   /// Replaces the cached user after a profile update.
   void updateCurrentUser(UserModel user) => _currentUser = user;
 
+  /// Re-fetches the signed-in user from the server so changes made elsewhere show up.
+  Future<Result<UserModel>> refreshCurrentUser() async {
+    final result = await _authRepo.currentUser();
+    result.fold((_) {}, (user) {
+      _currentUser = user;
+    });
+    return result;
+  }
+
   /// Returns true if a user is currently authenticated.
   bool get isAuthenticated => _currentToken != null;
 
