@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\StockMovement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ReceivingController extends Controller
 {
@@ -87,9 +88,43 @@ class ReceivingController extends Controller
         return response()->json($receiving);
     }
 
-    public function destroy(Receiving $receiving)
+    public function destroy(Request $request, Receiving $receiving)
     {
-        $receiving->delete();
+        DB::transaction(function () use ($receiving, $request) {
+            foreach ($receiving->items as $line) {
+                $invItem = Item::lockForUpdate()->find($line->item_id);
+                if (! $invItem) {
+                    continue;
+                }
+
+                $newQty = $invItem->quantity - $line->quantity_received;
+                if ($newQty < 0) {
+                    throw ValidationException::withMessages([
+                        'items' => ["Cannot delete: stock for {$invItem->name} has already been issued"],
+                    ]);
+                }
+
+                $invItem->update([
+                    'quantity' => $newQty,
+                    'total_value' => $newQty * $invItem->unit_cost,
+                ]);
+
+                StockMovement::create([
+                    'item_id' => $invItem->id,
+                    'type' => 'adjustment',
+                    'quantity' => -$line->quantity_received,
+                    'balance_after' => $newQty,
+                    'user_id' => $request->user()->id,
+                    'reference' => 'receiving_deleted',
+                    'reference_id' => $receiving->id,
+                    'notes' => "Stock reversed: receiving {$receiving->receiving_number} deleted",
+                ]);
+            }
+
+            $receiving->items()->delete();
+            $receiving->delete();
+        });
+
         return response()->json(['message' => 'Receiving deleted successfully']);
     }
 }

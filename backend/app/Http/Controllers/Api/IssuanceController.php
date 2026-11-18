@@ -96,9 +96,37 @@ class IssuanceController extends Controller
         return response()->json($issuance);
     }
 
-    public function destroy(Issuance $issuance)
+    public function destroy(Request $request, Issuance $issuance)
     {
-        $issuance->delete();
+        DB::transaction(function () use ($issuance, $request) {
+            foreach ($issuance->items as $line) {
+                $invItem = Item::lockForUpdate()->find($line->item_id);
+                if (! $invItem) {
+                    continue;
+                }
+
+                $newQty = $invItem->quantity + $line->quantity;
+                $invItem->update([
+                    'quantity' => $newQty,
+                    'total_value' => $newQty * $invItem->unit_cost,
+                ]);
+
+                StockMovement::create([
+                    'item_id' => $invItem->id,
+                    'type' => 'return_in',
+                    'quantity' => $line->quantity,
+                    'balance_after' => $newQty,
+                    'user_id' => $request->user()->id,
+                    'reference' => 'issuance_deleted',
+                    'reference_id' => $issuance->id,
+                    'notes' => "Stock restored: issuance {$issuance->issuance_number} deleted",
+                ]);
+            }
+
+            $issuance->items()->delete();
+            $issuance->delete();
+        });
+
         return response()->json(['message' => 'Issuance deleted successfully']);
     }
 }

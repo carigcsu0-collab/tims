@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:tims/core/extensions/context_extensions.dart';
 import 'package:tims/core/models/item_model.dart';
 import 'package:tims/core/models/qualification_model.dart';
 import 'package:tims/features/items/providers/items_provider.dart';
@@ -67,6 +68,37 @@ class _ItemFormDialogState extends ConsumerState<ItemFormDialog> {
   String? _nonNegativeNum(String? v) {
     final n = double.tryParse(v?.trim() ?? '');
     return (n == null || n < 0) ? 'Enter a number ≥ 0' : null;
+  }
+
+  Future<void> _delete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete item?'),
+        content: Text('Delete "${widget.item!.name}"? This cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    final error = await ref
+        .read(itemsNotifierProvider.notifier)
+        .delete(widget.item!.id);
+    if (!mounted) return;
+    if (error != null) {
+      context.showSnackBar(error);
+      return;
+    }
+    Navigator.of(context).pop(true);
+    context.showSnackBar('Item deleted');
   }
 
   Future<void> _submit() async {
@@ -240,6 +272,12 @@ class _ItemFormDialogState extends ConsumerState<ItemFormDialog> {
         ),
       ),
       actions: [
+        if (isEdit)
+          TextButton(
+            onPressed: _saving ? null : _delete,
+            style: TextButton.styleFrom(foregroundColor: context.colorScheme.error),
+            child: const Text('Delete'),
+          ),
         TextButton(
           onPressed: _saving ? null : () => Navigator.of(context).pop(false),
           child: const Text('Cancel'),

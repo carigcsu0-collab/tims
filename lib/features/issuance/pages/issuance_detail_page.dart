@@ -47,6 +47,39 @@ class _IssuanceDetailPageState extends ConsumerState<IssuanceDetailPage> {
     context.showSnackBar('Issuance updated');
   }
 
+  Future<void> _delete() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete issuance?'),
+        content: Text(
+          'Delete ${_issuance.issuanceNumber}? Issued quantities will be returned to stock.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    final error = await ref
+        .read(issuanceNotifierProvider.notifier)
+        .delete(_issuance.id);
+    if (!mounted) return;
+    if (error != null) {
+      context.showSnackBar(error, isError: true);
+      return;
+    }
+    Navigator.of(context).pop(true);
+    context.showSnackBar('Issuance deleted');
+  }
+
   String _userName(List<UserModel> users, int id) {
     final match = users.where((u) => u.id == id).firstOrNull;
     return match?.name ?? 'User #$id';
@@ -71,6 +104,11 @@ class _IssuanceDetailPageState extends ConsumerState<IssuanceDetailPage> {
             tooltip: 'Edit purpose and notes',
             onPressed: _edit,
             icon: const Icon(Icons.edit_outlined),
+          ),
+          IconButton(
+            tooltip: 'Delete',
+            onPressed: _delete,
+            icon: Icon(Icons.delete_outline, color: context.colorScheme.error),
           ),
         ],
       ),

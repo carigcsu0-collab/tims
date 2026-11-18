@@ -90,6 +90,15 @@ class IssuanceNotifier extends StateNotifier<IssuanceState> {
     });
   }
 
+  /// Deletes an issuance and returns its stock to inventory. Returns an error message on failure.
+  Future<String?> delete(int id) async {
+    final result = await _repository.delete(id);
+    return result.fold((failure) => failure.message, (_) {
+      refresh();
+      return null;
+    });
+  }
+
   Future<void> refresh() async {
     _page = 1;
     _issuances = [];

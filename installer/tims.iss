@@ -1,9 +1,9 @@
 ; Inno Setup script for CSU TVET IMS (Windows).
-; Build with:  ISCC.exe /DAppVersion=1.0.0 installer\tims.iss
+; Build with:  ISCC.exe /DAppVersion=1.0.1 installer\tims.iss
 ; Run from the project root after `flutter build windows --release`.
 
 #ifndef AppVersion
-  #define AppVersion "1.0.0"
+  #define AppVersion "1.0.1"
 #endif
 
 #define AppName "CSU TVET IMS"
