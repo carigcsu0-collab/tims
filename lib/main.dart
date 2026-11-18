@@ -7,6 +7,7 @@ import 'package:tims/app/routes/app_router.dart';
 import 'package:tims/app/services/preferences_service.dart';
 import 'package:tims/app/services/providers.dart';
 import 'package:tims/app/themes/app_theme.dart';
+import 'package:tims/app/widgets/app_update_checker.dart';
 
 /// Entry point for the TIMS application.
 Future<void> main() async {
@@ -43,6 +44,10 @@ class TimsApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
       routerConfig: router,
+      builder: (context, child) => AppUpdateChecker(
+        navigatorKey: rootNavigatorKey,
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

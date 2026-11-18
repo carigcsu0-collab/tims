@@ -26,11 +26,15 @@ import 'package:tims/features/settings/pages/settings_page.dart';
 import 'package:tims/features/profile/pages/profile_page.dart';
 import 'package:tims/features/shared/pages/main_shell.dart';
 
+/// Root navigator, shared so app-wide dialogs can appear over any screen.
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 /// Router configuration provider.
 final routerProvider = Provider<GoRouter>((ref) {
   final authService = ref.watch(authServiceProvider);
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: RoutePaths.splash,
     redirect: (context, state) {
       final isLoggedIn = authService.isAuthenticated;

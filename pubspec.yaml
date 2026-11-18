@@ -62,6 +62,9 @@ dependencies:
   # Form validation
   flutter_form_builder: ^10.3.0
   form_builder_validators: ^11.1.2
+  package_info_plus: ^9.0.1
+  path_provider: ^2.1.6
+  open_filex: ^5.0.0
 
 dev_dependencies:
   flutter_test:
